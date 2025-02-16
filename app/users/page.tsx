@@ -23,7 +23,7 @@ const Users = () => {
   const fetchUsers = async () => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URI}/auth/user`);
-
+      console.log("res,", res);
       if (res.ok) {
         const data = await res.json();
         console.log("users Fetched successfully");
@@ -31,14 +31,15 @@ const Users = () => {
 
       }
     } catch (error) {
-      console.log("eror", error)
+      console.log("erorrrrrrrrrrrrrrrrrrrrrrrrr", error);
+      setloading(false)
     } finally {
       setloading(false)
     }
   }
-if(loading) {
-  return <div className="h-screen">Loading ....</div>
-}
+  if (loading) {
+    return <div className="h-screen">Loading ....</div>
+  }
   return (
     <div className="bg-gray-900 text-white p-8 rounded-lg shadow-lg max-w-4xl mx-auto">
       <div className="flex justify-between">

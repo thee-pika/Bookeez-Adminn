@@ -6,6 +6,7 @@ import { useState } from "react";
 const Sidebar = () => {
     const router = useRouter();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    
     const handleLogout = () => {
         localStorage.removeItem('authToken');
         setIsLoggedIn(false);
@@ -26,6 +27,11 @@ const Sidebar = () => {
                     <Link href={"/users"}>
                         <div className="users text-white p-4 bg-[#352d2d92] rounded-md m-2 hover:bg-[rgba(55,50,50,0.2)]">
                             Users
+                        </div>
+                    </Link>
+                    <Link href={"/payments"}>
+                        <div className="payments text-white p-4 bg-[#352d2d92] rounded-md m-2 hover:bg-[#37323234]">
+                            Payments
                         </div>
                     </Link>
                     <Link href={"/reviews"}>

@@ -1,9 +1,12 @@
 "use client"
 
 import React, { useEffect, useState } from 'react'
-import { Rating } from 'react-simple-star-rating'
+// import { Rating } from 'react-simple-star-rating'
 import dotenv from 'dotenv';
 import { useRouter } from "next/navigation";
+import Image from 'next/image';
+
+dotenv.config();
 
 interface Review {
   comment: string,
@@ -13,35 +16,35 @@ interface Review {
   date: string
 }
 const Reviews = () => {
-  dotenv.config();
+
   const router = useRouter();
-  const [rating, setRating] = useState(0);
+  // const [rating, setRating] = useState(0);
   const [allReviews, setallReviews] = useState<Review[] | undefined>([])
   const [users, setUsers] = useState<{ [key: string]: string }>({})
 
-  const handleRating = (rate: number) => {
-    setRating(rate)
-}
+  // const handleRating = (rate: number) => {
+  //   setRating(rate)
+  // }
 
-// const handleReset = () => {
-//     // Set the initial value
-//     setRating(0)
-// }
+  // const handleReset = () => {
+  //     // Set the initial value
+  //     setRating(0)
+  // }
 
 
   useEffect(() => {
     const fetchReviews = async () => {
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URI}/api/template/review`);
-  
+
         if (res.ok) {
           const data = await res.json();
-  
+          console.log("all reviews in 11111111111111111111", data.allReviews);
           setallReviews(data.allReviews)
           fetchUsername(data.allReviews)
-  
+
           router.refresh()
-  
+
         }
       } catch (error) {
         console.log("eror", error)
@@ -54,14 +57,16 @@ const Reviews = () => {
   const fetchUsername = async (allReviews: Review[]) => {
     try {
       const userIds = allReviews.map((review) => review.userId)
-
+      console.log("all reviews", allReviews);
       const uniqueUserIds = [...new Set(userIds)]
       const userPromises = uniqueUserIds.map(async (userId) => {
         const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URI}/auth/user/${userId}`);
 
         if (res.ok) {
           const data = await res.json()
-          return { userId, username: data.username }
+          console.log("data", data);
+          console.log("data.user.username", data.user.username);
+          return { userId, username: data.user.username }
         }
         return null;
       })
@@ -93,15 +98,15 @@ const Reviews = () => {
           >
             {/* Star Rating */}
             <div className="flex items-center mb-4">
-              {/* <StarRatingComponent
-                name={`rating-${review.userId}`}
-                starColor="#FFD700"
-                starCount={5}
-                value={review.rating}
-                editing={false}
-                emptyStarColor="#d3d3d3"
-              /> */}
-                <Rating onClick={handleRating} initialValue={rating} />
+              <div className="flex">
+                <Image
+                  src={"/assests/star.svg"}
+                  alt={""}
+                  width={24}
+                  height={24}
+                />
+                <span className="text-lg mt-2 text-white ml-[2px]">{review.rating ? review.rating : 1} / 5</span>
+              </div>
             </div>
             {/* Review Content */}
             <p className="text-white text-lg mb-2 italic">&quot;{review.comment}&quot;</p>

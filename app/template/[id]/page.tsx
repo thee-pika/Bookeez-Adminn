@@ -31,6 +31,7 @@ const Template = () => {
     const router = useRouter()
     const [template, setTemplate] = useState<Template | undefined>()
     const [loading, setloading] = useState(true);
+    
     useEffect(() => {
         if (id) {
             fetchTemplate()
@@ -52,10 +53,10 @@ const Template = () => {
             }
         } catch (error) {
             console.log("eror!!", error)
+            setloading(false)
         } finally {
-            setloading(true)
+            setloading(false)
         }
-
     }
    if(loading) {
     return <div className="h-screen">Loading ...</div>
