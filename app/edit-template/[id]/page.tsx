@@ -32,7 +32,21 @@ const EditTemplate = () => {
     const [, setTemplate] = useState<Template | undefined>()
     const [loading, setLoading] = useState(true)
     const { id } = useParams()
+    const [loggedIn, setloggedIn] = useState<boolean>();
 
+    const Token = localStorage.getItem("authToken");
+    console.log("Token", Token);
+    
+    useEffect(() => {
+      console.log("Token inside", Token);
+      if (Token) {
+        setloggedIn(true);
+      } else {
+        setloggedIn(false);
+        router.push("/auth/login");
+      }
+    }, [Token]);
+    
     useEffect(() => {
         if (id) {
             const fetchTemplate = async () => {
@@ -130,14 +144,13 @@ const EditTemplate = () => {
      
         const defaultValues = { ...formData, imageUrl };
 
-
-
         try {
             console.log(defaultValues)
             const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URI}/api/template/${id}`, {
                 method: "PUT",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${Token}`,
                 },
                 body: JSON.stringify({
                     template_name,

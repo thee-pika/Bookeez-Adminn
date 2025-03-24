@@ -1,45 +1,49 @@
-'use client';
+"use client";
 
 import Link from "next/link";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 import { useState } from "react";
-import { useRouter } from 'next/navigation';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from "next/navigation";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const router = useRouter();
   dotenv.config();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const handleSubmit = async (e: React.FormEvent<EventTarget>) => {
     e.preventDefault();
     const loginData = { email, password };
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URI}/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(loginData),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URI}/auth/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(loginData),
+        }
+      );
       const data = await response.json();
-
+      console.log("data", data);
+      console.log("authToken", data.token);
+      
       if (response.ok) {
         // Store the JWT token in localStorage
-        localStorage.clear(); 
-        localStorage.setItem('user', JSON.stringify(data.user));
-        localStorage.setItem('authToken', data.token);
-        localStorage.setItem('refreshToken', data.refreshToken);
-        
+        localStorage.clear();
+        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("authToken", data.token);
+        localStorage.setItem("refreshToken", data.refreshToken);
+
         toast.success("Logged In successfully!");
 
-        router.push("/"); 
+        router.push("/");
       } else {
         toast.error("Failed to login!");
-
       }
     } catch (error) {
       console.log("Error Login", error);
@@ -56,9 +60,18 @@ const Login = () => {
               <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                 Sign in to your account
               </h1>
-              <form className="space-y-4 md:space-y-6" action="#" onSubmit={handleSubmit}>
+              <form
+                className="space-y-4 md:space-y-6"
+                action="#"
+                onSubmit={handleSubmit}
+              >
                 <div>
-                  <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+                  <label
+                    htmlFor="email"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Your email
+                  </label>
                   <input
                     type="email"
                     name="email"
@@ -71,7 +84,12 @@ const Login = () => {
                   />
                 </div>
                 <div>
-                  <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                  <label
+                    htmlFor="password"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Password
+                  </label>
                   <input
                     type="password"
                     name="password"
@@ -94,7 +112,12 @@ const Login = () => {
                       />
                     </div>
                     <div className="ml-3 text-sm">
-                      <label htmlFor="remember" className="text-gray-500 dark:text-gray-300">Remember me</label>
+                      <label
+                        htmlFor="remember"
+                        className="text-gray-500 dark:text-gray-300"
+                      >
+                        Remember me
+                      </label>
                     </div>
                   </div>
                 </div>
@@ -105,7 +128,13 @@ const Login = () => {
                   Sign in
                 </button>
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                  Don’t have an account yet? <Link href={"/auth/signup"} className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</Link>
+                  Don’t have an account yet?{" "}
+                  <Link
+                    href={"/auth/signup"}
+                    className="font-medium text-primary-600 hover:underline dark:text-primary-500"
+                  >
+                    Sign up
+                  </Link>
                 </p>
               </form>
             </div>
@@ -118,4 +147,3 @@ const Login = () => {
 };
 
 export default Login;
-
