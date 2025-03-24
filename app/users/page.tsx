@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import dotenv from 'dotenv';
+import { toast } from "react-toastify";
 
 interface User {
   _id: string;
@@ -23,20 +24,21 @@ const Users = () => {
   const fetchUsers = async () => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URI}/auth/user`);
-      console.log("res,", res);
+   
       if (res.ok) {
         const data = await res.json();
-        console.log("users Fetched successfully");
+      
         setUsers(data.users)
 
       }
     } catch (error) {
-      console.log("erorrrrrrrrrrrrrrrrrrrrrrrrr", error);
+     toast.error("Error fetching users")
       setloading(false)
     } finally {
       setloading(false)
     }
   }
+  
   if (loading) {
     return <div className="h-screen">Loading ....</div>
   }
