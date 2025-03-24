@@ -32,13 +32,14 @@ const Users = () => {
 
       }
     } catch (error) {
-     toast.error("Error fetching users")
+     toast.error(`Error fetching users, ${error}`);
+     
       setloading(false)
     } finally {
       setloading(false)
     }
   }
-  
+
   if (loading) {
     return <div className="h-screen">Loading ....</div>
   }

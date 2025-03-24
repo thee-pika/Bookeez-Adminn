@@ -10,20 +10,18 @@ import { useRouter } from "next/navigation";
 const NewTemplate = () => {
   dotenv.config();
   const router = useRouter();
-  const [loggedIn, setloggedIn] = useState<boolean>();
 
-  const Token = localStorage.getItem("authToken");
-  console.log("Token", Token);
-
+  const [Token, setToken] = useState<string | null>(null);
   useEffect(() => {
-    console.log("Token inside", Token);
-    if (Token) {
-      setloggedIn(true);
-    } else {
-      setloggedIn(false);
-      router.push("/auth/login");
+    if (typeof window !== "undefined") {
+      const authToken = localStorage.getItem("authToken");
+      setToken(authToken);
+
+      if (!authToken) {
+        router.push("/auth/login");
+      }
     }
-  }, [Token]);
+  }, []);
 
   const [formData, SetFormData] = useState({
     title: "",
@@ -63,8 +61,6 @@ const NewTemplate = () => {
   const handleSubmit = async (e: React.FormEvent<EventTarget>) => {
     e.preventDefault();
 
-    console.log("form submit clciked");
-
     const imageUrl = await uploadImageToCloudinary();
 
     if (!imageUrl) {
@@ -75,7 +71,6 @@ const NewTemplate = () => {
     const defaultValues = { ...formData, imageUrl };
 
     try {
-      console.log(defaultValues);
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/add-template`,
         {
@@ -96,8 +91,7 @@ const NewTemplate = () => {
         router.push("/");
       }
     } catch (error) {
-      toast.error("Error adding book. Please try again.");
-      console.log("Error:", error);
+      toast.error(`Error adding book. Please try again ${error}`);
     }
   };
 
@@ -370,7 +364,6 @@ const NewTemplate = () => {
               <button
                 type="submit"
                 className="text-white mt-4 p-4 w-[50%] bg-[#366977] hover:bg-[#153943] focus:outline-none focus:ring-4 focus:ring-[#153943] font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 onCli"
-              
               >
                 Submit
               </button>

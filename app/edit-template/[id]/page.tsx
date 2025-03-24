@@ -31,15 +31,11 @@ const EditTemplate = () => {
   const [, setTemplate] = useState<Template | undefined>();
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
-  const [loggedIn, setloggedIn] = useState<boolean>();
 
   const Token = localStorage.getItem("authToken");
 
   useEffect(() => {
-    if (Token) {
-      setloggedIn(true);
-    } else {
-      setloggedIn(false);
+    if (!Token) {
       router.push("/auth/login");
     }
   }, [Token]);
@@ -76,7 +72,7 @@ const EditTemplate = () => {
             setTemplateName(template.template_name);
           }
         } catch (error) {
-          toast.error("eror!!");
+          toast.error(`Error: ${error}`);
         } finally {
           setLoading(false);
         }
@@ -158,7 +154,7 @@ const EditTemplate = () => {
         router.push("/");
       }
     } catch (error) {
-      toast.error("Error adding book. Please try again.");
+      toast.error(`Error: ${error}`);
     }
   };
 
